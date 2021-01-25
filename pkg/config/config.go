@@ -723,6 +723,18 @@ func (p *Prop) IsStringType() bool {
 	return strings.ToLower(*p.Type) == "string"
 }
 
+func (p *Prop) IsDateType() bool {
+	return strings.ToLower(*p.Type) == "date"
+}
+
+func (p *Prop) IsTimeType() bool {
+	return strings.ToLower(*p.Type) == "time"
+}
+
+func (p *Prop) IsDateTimeType() bool {
+	return strings.ToLower(*p.Type) == "datetime"
+}
+
 func (p *Prop) FormatValue(record base.Record) (string, error) {
 	if p.Index != nil && *p.Index >= len(record) {
 		return "", fmt.Errorf("Prop index %d out range %d of record(%v)", *p.Index, len(record), record)
@@ -730,6 +742,15 @@ func (p *Prop) FormatValue(record base.Record) (string, error) {
 	r := record[*p.Index]
 	if p.IsStringType() {
 		return fmt.Sprintf("%q", r), nil
+	}
+	if p.IsDateType() {
+		return fmt.Sprintf("date(%q)", r), nil
+	}
+	if p.IsTimeType() {
+		return fmt.Sprintf("time(%q)", r), nil
+	}
+	if p.IsDateTimeType() {
+		return fmt.Sprintf("datetime(%q)", r), nil
 	}
 	return r, nil
 }
